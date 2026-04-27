@@ -1,8 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Navbar from "./components/navbar";
-import Form from "./components/form";
-import Preview from "./components/preview";
-import TemplateGallery from "./components/templategallery";
 import { 
   Rocket, 
   ArrowLeft, 

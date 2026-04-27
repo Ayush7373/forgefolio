@@ -1,9 +1,10 @@
 import React from 'react';
-import { Sparkles, User, Briefcase, Trash2, Plus } from 'lucide-react';
+import { Sparkles, User, Briefcase, Trash2, Plus, Link as LinkIcon, Code2 } from 'lucide-react';
 
 /**
- * EDITOR FORM COMPONENT v3.9.4
+ * EDITOR FORM COMPONENT v3.9.5
  * Handles Identity and Portfolio data entry with robust safety guards.
+ * Added: Global Skills and Project Live Links.
  */
 const Form = ({ formData, setFormData }) => {
   // CRITICAL: Data Guard to prevent app crash if data is still fetching
@@ -93,16 +94,23 @@ const Form = ({ formData, setFormData }) => {
             className={inputClass} 
             placeholder="Tell your professional narrative..." 
           />
-          <input 
-            name="skills" 
-            value={Array.isArray(formData.skills) ? formData.skills.join(', ') : ''} 
-            onChange={(e) => setFormData(prev => ({ 
-              ...prev, 
-              skills: e.target.value.split(',').map(s => s.trim()) 
-            }))} 
-            className={inputClass} 
-            placeholder="Skills (comma separated: React, Node, UI)" 
-          />
+          
+          {/* Skills Input Field */}
+          <div className="relative group">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+              <Code2 size={16} />
+            </div>
+            <input 
+              name="skills" 
+              value={Array.isArray(formData.skills) ? formData.skills.join(', ') : ''} 
+              onChange={(e) => setFormData(prev => ({ 
+                ...prev, 
+                skills: e.target.value.split(',').map(s => s.trim()) 
+              }))} 
+              className={`${inputClass} pl-12`} 
+              placeholder="Skills (comma separated: React, Node, UI)" 
+            />
+          </div>
         </div>
       </section>
 
@@ -116,11 +124,11 @@ const Form = ({ formData, setFormData }) => {
            <button 
              onClick={() => setFormData(prev => ({ 
                ...prev, 
-               projects: [...(prev.projects || []), { id: Date.now(), title: "", desc: "", image: "" }] 
+               projects: [...(prev.projects || []), { id: Date.now(), title: "", desc: "", image: "", link: "" }] 
              }))} 
              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-colors"
            >
-             <Plus size={14} /> Add Work
+             <開Plus size={14} /> Add Work
            </button>
         </div>
 
@@ -156,6 +164,20 @@ const Form = ({ formData, setFormData }) => {
                      placeholder="Describe the impact and technical stack..." 
                      className="w-full bg-transparent text-sm text-gray-500 outline-none leading-relaxed resize-none p-0" 
                    />
+
+                   {/* Project Live Link Field */}
+                   <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/5 focus-within:border-blue-500/50 transition-all">
+                     <LinkIcon size={14} className="text-gray-400" />
+                     <input 
+                       value={p.link || ''} 
+                       onChange={(e) => setFormData({
+                         ...formData, 
+                         projects: formData.projects.map(pj => pj.id === p.id ? {...pj, link: e.target.value} : pj)
+                       })} 
+                       placeholder="Live URL (e.g. https://...)" 
+                       className="w-full bg-transparent text-[11px] font-medium outline-none dark:text-gray-300" 
+                     />
+                   </div>
                    
                    {/* Project Image Upload */}
                    <label className="block w-full py-2 border border-dashed border-gray-200 dark:border-gray-800 text-gray-400 text-center rounded-xl text-[9px] font-black uppercase tracking-widest cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
