@@ -428,10 +428,11 @@ export default function App() {
   const [formData, setFormData] = useState({
     fullName: "Alex Rivera",
     title: "Lead Digital Architect",
-    bio: "Crafting high-performance digital ecosystems through minimalist design and technical precision.",
-    profileImage: "",
-    skills: ["React", "System Design", "Tailwind", "Node.js"],
-    projects: [{ id: 1, title: "Project Alpha", desc: "Premium design engine for modern builders.", image: "" }]
+    bio: "Pioneering high-impact digital ecosystems.",
+    skills: [], // Initialize as empty array
+    projects: [
+      { id: 1, title: "Project Alpha", desc: "Description here", link: "" }
+    ]
   });
 
   // Content for the Info Modals
