@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Poppins:wght@400;700;900&family=Roboto:wght@400;700&display=swap');
+
+/* Base transition for theme changes */
+* {
+  transition: font-family 0.3s ease, padding 0.3s ease, gap 0.3s ease;
+}
 
 @tailwind base;
 @tailwind components;

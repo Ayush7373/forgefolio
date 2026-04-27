@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, User, Briefcase, Trash2, Plus, Link as LinkIcon, Code2 } from 'lucide-react';
+import { Sparkles, User, Briefcase, Trash2, Plus, Link as LinkIcon, Code2, Zap } from 'lucide-react';
 
 /**
  * EDITOR FORM COMPONENT v3.9.5
@@ -110,6 +110,65 @@ const Form = ({ formData, setFormData }) => {
               className={`${inputClass} pl-12`} 
               placeholder="Skills (comma separated: React, Node, UI)" 
             />
+          </div>
+        </div>
+      </section>
+
+      {/* THEME CUSTOMIZATION PANEL */}
+      <section className="space-y-6 text-left border-b dark:border-gray-800 pb-8 mb-8">
+        <div className="flex items-center gap-3">
+          <Zap size={18} className="text-yellow-500" />
+          <h3 className="text-[11px] font-black uppercase tracking-[0.4em] dark:text-white">Visual Engine</h3>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
+          {/* Font Selection */}
+          <div className="space-y-2">
+            <label className="text-[9px] font-black uppercase text-gray-400 px-1">Typography</label>
+            <select
+              value={formData.theme?.font || "Poppins"}
+              onChange={(e) => setFormData({...formData, theme: { ...formData.theme, font: e.target.value }})}
+              className="w-full p-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0d0d0d] text-sm dark:text-white outline-none"
+            >
+              {["Poppins", "Inter", "Roboto", "Montserrat", "JetBrains Mono", "Playfair Display"].map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Color Picker & Layout Toggle */}
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-2">
+              <label className="text-[9px] font-black uppercase text-gray-400 px-1">Accent Color</label>
+              <div className="flex items-center gap-3 p-2 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0d0d0d]">
+                <input
+                  type="color"
+                  value={formData.theme?.color || "#2563eb"}
+                  onChange={(e) => setFormData({...formData, theme: { ...formData.theme, color: e.target.value }})}
+                  className="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-none"
+                />
+                <span className="text-[10px] font-mono dark:text-gray-400 uppercase">{formData.theme?.color || "#2563eb"}</span>
+              </div>
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <label className="text-[9px] font-black uppercase text-gray-400 px-1">Layout Spacing</label>
+              <div className="flex bg-gray-100 dark:bg-[#1a1a1a] p-1 rounded-xl">
+                {['compact', 'comfortable', 'spacious'].map((lvl) => (
+                  <button
+                    key={lvl}
+                    onClick={() => setFormData({...formData, theme: { ...formData.theme, layout: lvl }})}
+                    className={`flex-1 py-2 text-[8px] font-black uppercase rounded-lg transition-all ${
+                      (formData.theme?.layout || 'comfortable') === lvl
+                      ? 'bg-white dark:bg-gray-800 shadow-sm text-blue-600'
+                      : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                  >
+                    {lvl[0]}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
