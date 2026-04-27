@@ -128,7 +128,7 @@ const Form = ({ formData, setFormData }) => {
              }))} 
              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-colors"
            >
-             <開Plus size={14} /> Add Work
+             <Plus size={14} /> Add Work
            </button>
         </div>
 

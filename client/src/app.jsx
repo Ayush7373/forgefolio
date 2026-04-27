@@ -174,7 +174,10 @@ const TemplateGallery = ({ selectedTemplate, onSelect }) => {
 const Form = ({ formData, setFormData }) => {
   if (!formData) return <div className="p-10 text-center text-gray-400 font-black uppercase text-[10px] tracking-widest">Initializing Data...</div>;
 
-  const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log(formData);
+  };
   
   const handleImageUpload = (e, type, projectId = null) => {
     const file = e.target.files[0];
