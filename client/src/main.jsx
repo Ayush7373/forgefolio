@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './app.jsx' // Standard import of your App hub
+import App from './components/app.jsx' // Standard import of your App hub
 import './index.css'
 
 /**
