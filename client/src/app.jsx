@@ -34,6 +34,7 @@ import {
 // Import components
 import Form from './components/form.jsx';
 import Preview from './components/preview.jsx';
+import TemplateGalleryComponent from './components/templategallery.jsx';
 
 const BACKEND_URL = 'http://localhost:5000/api/portfolio';
 const USER_ID = 'default-user';
@@ -41,7 +42,7 @@ const USER_ID = 'default-user';
 // ==========================================
 // 1. COMPONENT: MEGA MENU NAVBAR
 // ==========================================
-const Navbar = ({ view, setView, darkMode, setDarkMode, onSave, isSaving, saveStatus, setTemplate, onAboutClick }) => {
+const Navbar = ({ view, setView, darkMode, setDarkMode, onSave, isSaving, saveStatus, setTemplate, onAboutClick, onManualSave, onClearData }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const navRef = useRef(null);
 
@@ -115,10 +116,20 @@ const Navbar = ({ view, setView, darkMode, setDarkMode, onSave, isSaving, saveSt
 
         <div className="flex items-center gap-6">
           {view === 'builder' && (
-             <button onClick={onSave} disabled={isSaving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-               {isSaving ? <Loader2 size={14} className="animate-spin" /> : (saveStatus === 'success' ? <CheckCircle size={14}/> : <Zap size={14} />)}
-               <span className="uppercase tracking-widest">{saveStatus === 'success' ? 'Synced' : 'Sync'}</span>
-             </button>
+            <>
+              <button onClick={onSave} disabled={isSaving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                {isSaving ? <Loader2 size={14} className="animate-spin" /> : (saveStatus === 'success' ? <CheckCircle size={14}/> : <Zap size={14} />)}
+                <span className="uppercase tracking-widest">{saveStatus === 'success' ? 'Synced' : 'Sync'}</span>
+              </button>
+              <div className="flex gap-2">
+                <button onClick={onManualSave} className="px-4 py-2 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all">
+                  Save to Local
+                </button>
+                <button onClick={onClearData} className="px-4 py-2 bg-red-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-red-700 transition-all">
+                  Clear All
+                </button>
+              </div>
+            </>
           )}
           <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400 transition-all">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
@@ -221,6 +232,25 @@ export default function App() {
       .catch(() => console.warn("Backend local session mode."));
   }, []);
 
+  // State & Lifecycle (App.jsx)       // Add these inside your App component before the return statement
+
+  // Task 1: Auto-load data on app start
+  useEffect(() => {
+    const savedData = localStorage.getItem("portfolioData");
+    if (savedData) {
+      try {
+        setFormData(JSON.parse(savedData));
+      } catch (error) {
+        console.error("Error parsing localStorage data", error);
+      }
+    }
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Task 2: Auto-save on every change
+  useEffect(() => {
+    localStorage.setItem("portfolioData", JSON.stringify(formData));
+  }, [formData]); // Runs every time formData changes      
+
   // Save Functionality
   const handleSave = async () => {
     setIsSaving(true);
@@ -240,6 +270,24 @@ export default function App() {
     setIsSaving(false);
   };
 
+  // Task 3: Manual Save Button Handler
+  const handleManualSave = () => {
+    localStorage.setItem("portfolioData", JSON.stringify(formData));
+    alert("Data saved successfully!");
+  };
+
+  // Task 4: Clear Button Handler
+  const handleClearData = () => {
+    localStorage.removeItem("portfolioData");
+    setFormData({
+      fullName: "",
+      title: "",
+      bio: "",
+      skills: [],
+      projects: []
+    });
+  };
+
   // Dark Mode Side Effect
   useEffect(() => { 
     document.documentElement.classList.toggle('dark', darkMode); 
@@ -254,6 +302,8 @@ export default function App() {
         onSave={handleSave} isSaving={isSaving} saveStatus={saveStatus}
         setTemplate={setTemplate}
         onAboutClick={setActiveAboutDetail}
+        onManualSave={handleManualSave}
+        onClearData={handleClearData}
       />
       
       {/* ABOUT/TECH MODAL WINDOW */}
@@ -297,7 +347,7 @@ export default function App() {
             
             <div className="border-t border-gray-100 dark:border-gray-900 pt-32">
                <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-gray-400 text-center mb-20 uppercase">Select Foundation</h2>
-               <TemplateGallery selectedTemplate={template} onSelect={(id) => { setTemplate(id); setView('builder'); }} />
+               <TemplateGalleryComponent selectedTemplate={template} onSelect={(id) => { setTemplate(id); setView('builder'); }} />
             </div>
           </div>
         ) : (
@@ -317,7 +367,15 @@ export default function App() {
               <div className="max-w-[1000px] mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-[5rem] overflow-hidden transition-all duration-1000 animate-in zoom-in-95">
                 <Preview formData={formData} template={template} />
               </div>
-              <div className="mt-20 flex justify-center pb-20 no-print">
+              <div className="mt-6 flex flex-wrap justify-center gap-3 no-print">
+                <button onClick={handleManualSave} className="px-4 py-3 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-green-700 transition-all">
+                  Save to Local
+                </button>
+                <button onClick={handleClearData} className="px-4 py-3 bg-red-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-red-700 transition-all">
+                  Clear All
+                </button>
+              </div>
+              <div className="mt-10 flex justify-center pb-20 no-print">
                 <button onClick={() => window.print()} className="flex items-center gap-4 px-12 py-5 bg-gray-900 text-white rounded-[2rem] font-black text-[12px] uppercase shadow-2xl transition-transform hover:scale-105">
                   <Download size={20}/> Export high-res PDF
                 </button>
