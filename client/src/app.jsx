@@ -334,7 +334,7 @@ export default function App() {
           <div className="px-10 py-24">
             <div className="text-center mb-40 space-y-12 animate-in fade-in slide-in-from-bottom-12 duration-1000">
               <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[11px] font-black uppercase tracking-[0.5em] border border-blue-100 dark:border-blue-900/50 mx-auto">
-                <Rocket size={16} /> Elite Enterprise v3.9.4
+                <Rocket size={16} /> Digital Architecture for the Next Generation
               </div>
               <h1 className="text-[7rem] md:text-[11rem] font-black tracking-tighter dark:text-white uppercase leading-[0.75]">Build <br/> <span className="text-blue-600">Authority.</span></h1>
               <p className="text-2xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto font-medium">
