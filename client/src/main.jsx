@@ -7,8 +7,4 @@ import './index.css'
  * FORGEFOLIO v3.9.7 ENTRY POINT
  * This file is purely for mounting the React application.
  */
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
