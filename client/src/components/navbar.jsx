@@ -6,7 +6,6 @@ import {
   Terminal, 
   ChevronDown, 
   Zap, 
-  Shield, 
   Cpu, 
   Sparkles, 
   Linkedin, 
@@ -17,13 +16,21 @@ import {
   CheckCircle,
   BaggageClaim,
   Flame,
-  Orbit
+  Orbit,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
 
 /**
- * REFINED MEGA MENU NAVBAR v3.9.4
- * Features: Toggleable Mega Menu, Resolution fixes for LinkedIn/Mail icons,
- * and direct integration with the 6 dashing templates.
+ * AUTH CONTEXT IMPORT
+ * Resolution Fix: Ensuring the path correctly references the context folder
+ * relative to the src directory.
+ */
+import { useAuth } from './context/AuthContext';
+
+/**
+ * REFINED MEGA MENU NAVBAR v4.0.5
+ * Features: Auth state management, Mega Menu, and direct template integration.
  */
 const Navbar = ({ 
   view, 
@@ -38,6 +45,11 @@ const Navbar = ({
 }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const navRef = useRef(null);
+  
+  // Consume Auth Context
+  const auth = useAuth();
+  const user = auth?.user;
+  const logout = auth?.logout;
 
   const menuItems = {
     Creation: [
@@ -121,7 +133,7 @@ const Navbar = ({
           </div>
         </div>
 
-        {/* ACTIONS */}
+        {/* ACTIONS & AUTH */}
         <div className="flex items-center gap-6">
           {view === 'builder' && (
              <button onClick={onSave} disabled={isSaving} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-600/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
@@ -129,9 +141,44 @@ const Navbar = ({
                <span className="uppercase tracking-widest">{saveStatus === 'success' ? 'Synced' : 'Sync'}</span>
              </button>
           )}
+
           <button onClick={() => setDarkMode(!darkMode)} className="p-3.5 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400 transition-all active:scale-90">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
+
+          <div className="h-8 w-px bg-gray-100 dark:bg-gray-800 mx-2 hidden lg:block" />
+
+          {/* AUTH SECTION */}
+          {user ? (
+            <div className="flex items-center gap-4 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="hidden md:flex flex-col items-end">
+                <span className="text-[10px] font-black uppercase dark:text-white leading-none">{user.name}</span>
+                <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest pt-1">Active Architect</span>
+              </div>
+              <button 
+                onClick={() => { logout(); setView('home'); }} 
+                className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                title="Logout"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setView('login')} 
+                className="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 transition-colors"
+              >
+                Log In
+              </button>
+              <button 
+                onClick={() => setView('signup')} 
+                className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

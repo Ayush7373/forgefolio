@@ -28,13 +28,16 @@ import {
   Linkedin,
   Mail,
   Github,
-  Globe
+  Globe,
+  LogOut
 } from 'lucide-react';
 
 // Import components
 import Form from './components/form.jsx';
 import Preview from './components/preview.jsx';
 import TemplateGalleryComponent from './components/templategallery.jsx';
+import AuthPages from './pages/authpages.jsx';
+import { useAuth } from './context/authcontext.jsx';
 
 const BACKEND_URL = 'http://localhost:5000/api/portfolio';
 const USER_ID = 'default-user';
@@ -43,6 +46,7 @@ const USER_ID = 'default-user';
 // 1. COMPONENT: MEGA MENU NAVBAR
 // ==========================================
 const Navbar = ({ view, setView, darkMode, setDarkMode, onSave, isSaving, saveStatus, setTemplate, onAboutClick, onManualSave, onClearData }) => {
+  const { user, logout } = useAuth();
   const [activeMenu, setActiveMenu] = useState(null);
   const navRef = useRef(null);
 
@@ -131,6 +135,37 @@ const Navbar = ({ view, setView, darkMode, setDarkMode, onSave, isSaving, saveSt
               </div>
             </>
           )}
+
+          {/* Auth Menu */}
+          <div className="flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-300">{user.name}</span>
+                <button 
+                  onClick={() => { logout(); setView('home'); }} 
+                  className="px-4 py-2 bg-red-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-red-700 transition-all flex items-center gap-2"
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setView('login')} 
+                  className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-blue-700 transition-all"
+                >
+                  Sign In
+                </button>
+                <button 
+                  onClick={() => setView('signup')} 
+                  className="px-4 py-2 bg-purple-600 text-white rounded-xl text-[10px] font-black uppercase hover:bg-purple-700 transition-all"
+                >
+                  Join
+                </button>
+              </div>
+            )}
+          </div>
+
           <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400 transition-all">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -350,6 +385,12 @@ export default function App() {
                <TemplateGalleryComponent selectedTemplate={template} onSelect={(id) => { setTemplate(id); setView('builder'); }} />
             </div>
           </div>
+        ) : view === 'login' ? (
+          /* LOGIN PAGE */
+          <AuthPages mode="login" setView={setView} />
+        ) : view === 'signup' ? (
+          /* SIGNUP PAGE */
+          <AuthPages mode="signup" setView={setView} />
         ) : (
           /* VIEW 2: BUILDER WORKSPACE */
           <div className="flex flex-col xl:flex-row h-[calc(100vh-80px)] overflow-hidden">
